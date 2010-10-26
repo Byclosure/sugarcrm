@@ -73,7 +73,7 @@ module SugarCRM
       case response
         when Net::HTTPOK 
           raise SugarCRM::EmptyResponse unless response.body
-          response_json = JSON.parse response.body
+          response_json = JSON.parse response.body.gsub(/(.*\}).*/m, '\1') # allow php warnings at the end
           return false if response_json["result_count"] == 0
           if @debug 
             puts "#{method}: JSON Response:"
@@ -99,7 +99,7 @@ module SugarCRM
     # I.e. a SugarCRM Module named Users will generate
     # a SugarCRM::User class.
     def register_module(module_name, mod=SugarCRM)
-      klass_name = module_name.singularize
+      klass_name = module_name.singularize.capitalize # allow entities which are not capitalized
       return if mod.const_defined? klass_name
       klass = Class.new(SugarCRM::Base) do
         self.module_name = module_name
