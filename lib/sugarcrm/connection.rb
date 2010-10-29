@@ -99,7 +99,7 @@ module SugarCRM
     # I.e. a SugarCRM Module named Users will generate
     # a SugarCRM::User class.
     def register_module(module_name, mod=SugarCRM)
-      klass_name = module_name.singularize.capitalize # allow entities which are not capitalized
+      klass_name = module_name.singularize.camelize # allow entities which are not correctly capitalized
       return if mod.const_defined? klass_name
       klass = Class.new(SugarCRM::Base) do
         self.module_name = module_name
